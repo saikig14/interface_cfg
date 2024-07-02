@@ -12,8 +12,8 @@
                        - {conn_name: 'ens38', ifname: 'ens38', master: 'team0'}
                        - {conn_name: 'ens39', ifname: 'ens39', master: 'team0'}
            block:
-                 -  name: Master Interface Configuration in RHEL7
-                    nmcli:
+                 - name: Master Interface Configuration in RHEL7
+                   nmcli:
                           type: team
                           conn_name: '{{item.conn_name}}'
                           ip4: '{{item.ip4}}'
@@ -21,15 +21,15 @@
                           mode: '{{item.mode}}'
                           autoconnect: yes
                           state: present
-                    with_items: '{{nmcli_team}}'
-                 -  name: Slave Interface Configuration in RHEL7
-                    nmcli:
+                   with_items: '{{nmcli_team}}'
+                 - name: Slave Interface Configuration in RHEL7
+                   nmcli:
                           type: team-slave
                           conn_name: '{{item.conn_name}}'
                           ifname: '{{item.ifname}}'
                           master: '{{item.master}}'
                           state: present
-                    with_items: '{{nmcli_team_slave}}'
+                   with_items: '{{nmcli_team_slave}}'
            when: ansible_facts['distribution'] == "RedHat"
            notify: restart network service in redhat
          - name: Bonding Configuration in Ubuntu
@@ -62,14 +62,14 @@
                                              addresses:
                                                 - 8.8.8.8
                                                 - 8.8.4.4
-                 -  name: Slave Interface Configuration Ubuntu
-                    nmcli:
+                 - name: Slave Interface Configuration Ubuntu
+                   nmcli:
                           type: bond-slave
                           conn_name: '{{item.conn_name}}'
                           ifname: '{{item.ifname}}'
                           master: '{{item.master}}'
                           state: present
-                    with_items: '{{nmcli_bond_slave}}'
+                   with_items: '{{nmcli_bond_slave}}'
            when: ansible_facts['distribution'] == "Ubuntu"
            notify: restart network service in ubuntu
          - name: Bonding Configuration in CentOs
@@ -80,8 +80,8 @@
                        - {conn_name: 'ens37', ifname: 'ens37', master: 'bond0'}
                        - {conn_name: 'ens38', ifname: 'ens38', master: 'bond0'}
            block:
-                 -  name: Master Interface Configuration CentOs
-                    nmcli:
+                 - name: Master Interface Configuration CentOs
+                   nmcli:
                           type: bond
                           conn_name: '{{item.conn_name}}'
                           ip4: '{{item.ip4}}'
@@ -90,27 +90,27 @@
                           autoconnect: yes
                           miimon: 100
                           state: present
-                    with_items: '{{nmcli_bond}}'
-                 -  name: Slave Interface Configuration in CentOs
-                    nmcli:
+                   with_items: '{{nmcli_bond}}'
+                 - name: Slave Interface Configuration in CentOs
+                   nmcli:
                           type: bond-slave
                           conn_name: '{{item.conn_name}}'
                           ifname: '{{item.ifname}}'
                           master: '{{item.master}}'
                           state: present
-                    with_items: '{{nmcli_bond_slave}}'
+                   with_items: '{{nmcli_bond_slave}}'
            when: ansible_facts['distribution'] == "CentOS"
            notify: restart network service in centos
   handlers:
-           -  name: restart network service in redhat
-              service:
+           - name: restart network service in redhat
+             service:
                       name: network
                       state: restarted
-              when: ansible_facts['distribution'] == "RedHat"
-           -  name: restart network service in centos
-              service:
+             when: ansible_facts['distribution'] == "RedHat"
+           - name: restart network service in centos
+             service:
                       name: NetworkManager
                       state: restarted
-              when: ansible_facts['distribution'] == "CentOS"
-           -  name: restart network service in ubuntu
-              shell: netplan apply
+             when: ansible_facts['distribution'] == "CentOS"
+           - name: restart network service in ubuntu
+             shell: netplan apply
