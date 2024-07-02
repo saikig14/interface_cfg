@@ -1,8 +1,7 @@
 ---
 - name: Combining nic cards in the server
-  hosts: saicentos-srv9, sai-linuxsrv2, saiubuntu24-1
+  hosts: saiubuntu24-1, sai-linuxsrv2, saicentos-srv9
   remote_user: root
-  become: true
   tasks:
         -  name: Teaming Configuration in RHEL7
            vars:
@@ -38,6 +37,10 @@
                        - {conn_name: 'ens38', ifname: 'ens38', master: 'bond0'}
                        - {conn_name: 'ens39', ifname: 'ens39', master: 'bond0'}
            block:
+                 - name: install network manager
+                   apt:
+                        name: network-manager
+                        state: present
                  - name: Master Interface Configuration in Ubuntu
                    copy:
                         dest: /etc/netplan/bond0.yaml
