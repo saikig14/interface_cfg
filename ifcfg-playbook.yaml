@@ -4,7 +4,7 @@
   remote_user: root
   become: true
   tasks:
-         - name: Teaming Configuration in RHEL7
+        -  name: Teaming Configuration in RHEL7
            vars:
                 - nmcli_team:
                        - {conn_name: 'team0', ip4: "192.168.29.145/24", gw4: "192.168.29.1", mode: 'active-backup'}
@@ -32,7 +32,7 @@
                    with_items: '{{nmcli_team_slave}}'
            when: ansible_facts['distribution'] == "RedHat"
            notify: restart network service in redhat
-         - name: Bonding Configuration in Ubuntu
+        -  name: Bonding Configuration in Ubuntu
            vars:
                 - nmcli_bond_slave:
                        - {conn_name: 'ens38', ifname: 'ens38', master: 'bond0'}
@@ -72,7 +72,7 @@
                    with_items: '{{nmcli_bond_slave}}'
            when: ansible_facts['distribution'] == "Ubuntu"
            notify: restart network service in ubuntu
-         - name: Bonding Configuration in CentOs
+        -  name: Bonding Configuration in CentOs
            vars:
                 - nmcli_bond:
                        - {conn_name: 'bond0', ip4: "192.168.29.144/24", gw4: "192.168.29.1", mode: 'active-backup'}
